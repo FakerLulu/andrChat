@@ -3,7 +3,13 @@ package com.example.chat;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,12 +31,22 @@ public class Ccc {
         textView = ma.findViewById(R.id.textView11);
     }
 
-    void start() {
+    void start(String ipAdress) {
+        if(socket != null && socket.isConnected()){
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         Runnable rr = () -> {
 
             try {
+
                 socket = new Socket();
-                socket.connect(new InetSocketAddress("192.168.15.28", 9000));
+                socket.connect(new InetSocketAddress(ipAdress, 9000));
+                makeToast( "서버 - "+socket.getInetAddress().getHostAddress()+":"+socket.getPort()+" 접속");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,8 +60,8 @@ public class Ccc {
      *
      */
     private void recieve() {
-
-        while (true) {
+    boolean isend = false;
+        while (!isend) {
 
             try {
                 InputStream bufReader = (socket.getInputStream());
@@ -76,6 +92,7 @@ public class Ccc {
                 textView.setText(textView.getText() + "\n서버끊어짐");
                 try {
                     socket.close();
+                    isend= true;
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -88,7 +105,9 @@ public class Ccc {
         Runnable rr = () -> {
 
             try {
-
+    if(socket == null){
+        makeToast("접속 먼저 하세요");
+    }
                 // 서버 접속
 
                 //textView.setText(textView.getText().toString()+"\n"+msg+(socket.getInetAddress()));
@@ -109,6 +128,80 @@ public class Ccc {
         };
         Thread t = new Thread(rr);
         t.start();
+    }
+
+    public void sendPhoto(File img) {
+        Runnable rr;
+        rr = () -> {
+
+
+
+            try {
+                Socket pSocket = new Socket();
+                pSocket.connect(new InetSocketAddress("192.168.15.28",7777));
+                if(pSocket == null){
+                    makeToast("접속 먼저 하세요");
+                }
+                // 서버 접속
+
+                //textView.setText(textView.getText().toString()+"\n"+msg+(socket.getInetAddress()));
+
+                // Server에 보낼 데이터
+
+                File file = img;
+                if (!file.exists()) {
+                    System.out.println("File not Exist.");
+                    System.exit(0);
+                }
+
+                BufferedOutputStream toServer = new BufferedOutputStream(pSocket.getOutputStream());
+                DataOutputStream dos = new DataOutputStream(pSocket.getOutputStream());
+                dos.writeUTF(new String(file.getName().getBytes(), "UTF-8"));
+                dos.writeUTF("" + file.length());
+
+                OutputStream outputStream = pSocket.getOutputStream();
+
+                FileInputStream fileInputStream = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fileInputStream);
+
+                byte[] dataBuff = new byte[(int) file.length()];
+                int length = fileInputStream.read(dataBuff);
+                while (length != -1) {
+                    outputStream.write(dataBuff, 0, length);
+                    length = fileInputStream.read(dataBuff);
+                }
+                System.out.println("전송 성공");
+
+                byte[] buf = new byte[4096]; //buf 생성합니다.
+                int theByte = 0;
+                while ((theByte = bis.read(buf)) != -1) // BufferedInputStream으로
+                {
+                    toServer.write(buf,0,theByte);
+                }
+
+                toServer.flush();
+                toServer.close();
+                bis.close();
+                fileInputStream.close();
+                pSocket.close();
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+        };
+        Thread t = new Thread(rr);
+        t.start();
+    }
+
+    private void makeToast(String tm) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ma,tm,Toast.LENGTH_SHORT).show();;
+            }
+        }, 0);
     }
 
 }
