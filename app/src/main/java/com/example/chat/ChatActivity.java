@@ -12,7 +12,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,16 +22,17 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.io.File;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
     Ccc ccc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ccc = new Ccc(MainActivity.this);
+        setContentView(R.layout.activity_chatt);
+        ccc = new Ccc(ChatActivity.this);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
             } else {
                 ActivityCompat.requestPermissions(this,
@@ -41,35 +41,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 //참조 : http://naminsik.com/blog/3662
+
+
         final TextView textView = findViewById(R.id.textView11);
         final TextInputEditText extView = findViewById(R.id.textInputEditText23);
-        final TextInputEditText iptextv = findViewById(R.id.ipEdit);
         Button btn = findViewById(R.id.sendButton);
-        Button ipbtn = findViewById(R.id.ipButton);
         Button imgPick = findViewById(R.id.pickImage);
 
         textView.setMovementMethod(new ScrollingMovementMethod());
 
-
-imgPick.setOnClickListener(new View.OnClickListener() {
-    public void onClick(View v) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, 200);
-    }
-});
-
-        ipbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
+        ccc.start();
+        imgPick.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String ip = iptextv.getText().toString();
-                if(ip.matches("^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$")){
-                    ccc.start(ip);
-                }else{
-                    String tm = "ip 입력 다시하세요";
-                    Toast.makeText(MainActivity.this,tm,Toast.LENGTH_SHORT).show();;
-                }
-
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, 200);
             }
         });
 
@@ -109,7 +95,7 @@ imgPick.setOnClickListener(new View.OnClickListener() {
                  *  Uri 스키마를
                  *  content:/// 에서 file:/// 로  변경한다.
                  */
-                String[] proj = { MediaStore.Images.Media.DATA };
+                String[] proj = {MediaStore.Images.Media.DATA};
 
                 assert photoUri != null;
                 cursor = getContentResolver().query(photoUri, proj, null, null, null);

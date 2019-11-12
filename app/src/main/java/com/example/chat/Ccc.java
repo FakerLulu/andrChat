@@ -18,20 +18,28 @@ import java.net.Socket;
 
 public class Ccc {
 
-    /**
-     * @param args
-     */
+
 
     Socket socket;
-    MainActivity ma;
+    ChatActivity ma;
     final TextView textView;
+    static private String serverIP;
+    private ConnectionEnum ce = ConnectionEnum.ServerIP;
 
-    public Ccc(MainActivity mainActivity) {
-        ma = mainActivity;
-        textView = ma.findViewById(R.id.textView11);
+    public static void setMyName(String myName) {
+        Ccc.myName = myName;
     }
 
-    void start(String ipAdress) {
+    private static String myName;
+
+    public Ccc(ChatActivity chatActivity) {
+        ma = chatActivity;
+        textView = ma.findViewById(R.id.textView11);
+        serverIP = ce.getIp();
+//        myName = ""+(int)(Math.random()*100);
+    }
+
+    void start() {
         if(socket != null && socket.isConnected()){
             try {
                 socket.close();
@@ -44,7 +52,7 @@ public class Ccc {
             try {
 
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(ipAdress, 9000));
+                socket.connect(new InetSocketAddress(serverIP, 9000));
                 makeToast( "서버 - "+socket.getInetAddress().getHostAddress()+":"+socket.getPort()+" 접속");
 
             } catch (IOException e) {
@@ -76,7 +84,7 @@ public class Ccc {
                     @Override
                     public void run() {
                         // 사용하고자 하는 코드
-                        textView.append("\n" + "Message : " + message);
+                        textView.append("\n"+ message);
                         final int scrollAmount = textView.getLayout().getLineTop(textView.getLineCount()) - textView.getHeight();
                         // if there is no need to scroll, scrollAmount will be <=0
                         if (scrollAmount > 0)
@@ -116,7 +124,7 @@ public class Ccc {
 
                 OutputStream bufWriter = (socket.getOutputStream());
 
-                bufWriter.write(msg.getBytes("UTF-8"));
+                bufWriter.write((myName+" : "+msg).getBytes("UTF-8"));
 
                 bufWriter.flush();
 
@@ -138,7 +146,8 @@ public class Ccc {
 
             try {
                 Socket pSocket = new Socket();
-                pSocket.connect(new InetSocketAddress("192.168.15.28",7777));
+
+                pSocket.connect(new InetSocketAddress(serverIP,7777));
                 if(pSocket == null){
                     makeToast("접속 먼저 하세요");
                 }
@@ -156,6 +165,7 @@ public class Ccc {
 
                 BufferedOutputStream toServer = new BufferedOutputStream(pSocket.getOutputStream());
                 DataOutputStream dos = new DataOutputStream(pSocket.getOutputStream());
+                dos.writeUTF(new String(myName.getBytes(), "UTF-8"));
                 dos.writeUTF(new String(file.getName().getBytes(), "UTF-8"));
                 dos.writeUTF("" + file.length());
 
