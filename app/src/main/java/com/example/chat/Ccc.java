@@ -36,7 +36,6 @@ public class Ccc {
         ma = chatActivity;
         textView = ma.findViewById(R.id.textView11);
         serverIP = ce.getIp();
-//        myName = ""+(int)(Math.random()*100);
     }
 
     void start() {
@@ -118,7 +117,6 @@ public class Ccc {
     }
                 // 서버 접속
 
-                //textView.setText(textView.getText().toString()+"\n"+msg+(socket.getInetAddress()));
 
                 // Server에 보낼 데이터
 
@@ -153,7 +151,8 @@ public class Ccc {
                 }
                 // 서버 접속
 
-                //textView.setText(textView.getText().toString()+"\n"+msg+(socket.getInetAddress()));
+
+
 
                 // Server에 보낼 데이터
 

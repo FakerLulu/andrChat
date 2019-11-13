@@ -1,7 +1,7 @@
 package com.example.chat;
 
 public enum ConnectionEnum {
-    ServerIP("192.168.15.131");
+    ServerIP("192.168.15.116");
 
     private String ip;
     private  String serverIP;

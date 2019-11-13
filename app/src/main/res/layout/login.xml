@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login_screen">
+    tools:context=".MainActivity">
 
 
     <EditText
@@ -14,14 +14,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="300dp"
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
 
         android:hint="ID"
         app:layout_constraintEnd_toEndOf="@+id/passwordInput"
         app:layout_constraintStart_toStartOf="@+id/passwordInput"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/passwordInput"
@@ -29,7 +28,9 @@
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginBottom="160dp"
         android:hint="Password"
         android:inputType="textPassword"
@@ -47,7 +48,7 @@
         android:layout_below="@+id/passwordInput"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:text="Log in"
@@ -62,10 +63,9 @@
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/loginButton"
-
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
         android:text="Sign up"
@@ -79,8 +79,7 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="116dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +111,6 @@
         app:layout_constraintStart_toStartOf="@+id/signupButton"
         app:layout_constraintTop_toBottomOf="@+id/signupButton"
         app:layout_constraintVertical_bias="0.0" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

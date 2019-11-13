@@ -17,7 +17,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pickImage" />
+        app:layout_constraintTop_toBottomOf="@+id/pickImage"
+        android:inputType="textNoSuggestions|textMultiLine"
+        />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/textInputEditText23"
@@ -45,7 +47,7 @@
         android:layout_height="46dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/ryzen"
+        android:background="@drawable/paper_plane_light_blue"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textInputEditText23"
@@ -59,6 +61,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
         android:text="사진전송"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

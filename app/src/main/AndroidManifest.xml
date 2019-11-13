@@ -24,15 +24,33 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_path" />
+        <activity android:name=".FindID"/>
 
+        <activity android:name=".FindPW"/>
+
+        <activity android:name=".SignUp"/>
+
+
+        <activity android:name=".MainActivity">
+
+
+        <intent-filter>
+
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+
+    </intent-filter>
+
+    </activity>
         <activity
             android:name=".Login_screen"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 
