@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -47,10 +48,28 @@ public class ChatActivity extends AppCompatActivity {
         final TextInputEditText extView = findViewById(R.id.textInputEditText23);
         Button btn = findViewById(R.id.sendButton);
         Button imgPick = findViewById(R.id.pickImage);
+        Button imgDD = findViewById(R.id.down);
 
         textView.setMovementMethod(new ScrollingMovementMethod());
 
-        ccc.start();
+//        ccc.start();
+        imgDD.setOnClickListener((View v)->{
+            String list;
+            try {
+                Ccc.requestImgList cl = new Ccc.requestImgList();
+                list = cl.execute("").get();
+                Intent intent = new Intent(getApplicationContext(),ImgDown.class);
+                intent.putExtra("lintname",list);
+                startActivity(intent);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+
         imgPick.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);

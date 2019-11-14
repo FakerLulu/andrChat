@@ -58,7 +58,6 @@
 
                 <EditText
                     android:id="@+id/register_pw"
-                    android:inputType="textPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="8" />

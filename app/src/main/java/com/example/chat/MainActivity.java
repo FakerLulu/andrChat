@@ -63,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText idet = (EditText) findViewById(R.id.idInput);
                 EditText pwet = (EditText) findViewById(R.id.passwordInput);
-
-                try {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class) ;
+                startActivity(intent) ;
+                /*try {
                     String result;
                     String id = idet.getText().toString();
                     String pw = pwet.getText().toString();
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     Log.i("DBtest", ".....ERROR.....!");
-                }
+                }*/
             }
         });
 }

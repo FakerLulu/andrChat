@@ -1,27 +1,39 @@
 package com.example.chat;
 
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 
 public class Ccc {
 
 
 
     Socket socket;
-    ChatActivity ma;
+    AppCompatActivity ma;
     final TextView textView;
     static private String serverIP;
     private ConnectionEnum ce = ConnectionEnum.ServerIP;
@@ -32,7 +44,7 @@ public class Ccc {
 
     private static String myName;
 
-    public Ccc(ChatActivity chatActivity) {
+    public Ccc(AppCompatActivity chatActivity) {
         ma = chatActivity;
         textView = ma.findViewById(R.id.textView11);
         serverIP = ce.getIp();
@@ -139,9 +151,6 @@ public class Ccc {
     public void sendPhoto(File img) {
         Runnable rr;
         rr = () -> {
-
-
-
             try {
                 Socket pSocket = new Socket();
 
@@ -150,9 +159,6 @@ public class Ccc {
                     makeToast("접속 먼저 하세요");
                 }
                 // 서버 접속
-
-
-
 
                 // Server에 보낼 데이터
 
@@ -203,6 +209,64 @@ public class Ccc {
         t.start();
     }
 
+    public void recievePhoto(String fileName) {
+        Runnable rr;
+        rr = () -> {
+            try {
+                Socket pSocket = new Socket();
+
+                pSocket.connect(new InetSocketAddress(serverIP,7777));
+                if(pSocket == null){
+                    makeToast("접속 먼저 하세요");
+                }
+                // 서버 접속
+
+                // Server에 보낼 데이터
+                final String LOCAL_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String folder = LOCAL_PATH + "/downloads";
+                BufferedOutputStream toServer = new BufferedOutputStream(pSocket.getOutputStream());
+                DataOutputStream dos = new DataOutputStream(pSocket.getOutputStream());
+                dos.writeUTF(new String("down".getBytes(), "UTF-8"));
+                dos.writeUTF(new String(fileName.getBytes(), "UTF-8"));
+
+
+                BufferedInputStream up = new BufferedInputStream(pSocket.getInputStream());
+                DataInputStream fromClient = new DataInputStream(up);
+                String filename = fromClient.readUTF();
+                int filesize = Integer.parseInt(fromClient.readUTF());
+
+                System.out.println(filename + "\t을 받습니다.");
+
+                // client단에서 전송되는 file 내용을 server단에 생성시킨 file에 write할수 있는 stream
+                File newfile = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS+"/testDown");
+                if (!newfile.exists()) {
+                    newfile.mkdir();
+                }
+                System.out.println(newfile.getCanonicalPath() + "/" + filename);
+                FileOutputStream toFile = new FileOutputStream(newfile.getCanonicalPath() + "/" + filename);
+                BufferedOutputStream outFile = new BufferedOutputStream(toFile);
+                System.out.println((filename + " " + filesize));
+                byte[] bb = new byte[filesize];
+                int ch = 0;
+                while ((ch = up.read()) != -1) {
+                    outFile.write(ch);
+                }
+
+                makeToast(filename + " 수신완료");
+                outFile.flush();
+                outFile.close();
+                pSocket.close();
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+        };
+        Thread t = new Thread(rr);
+        t.start();
+    }
+
     private void makeToast(String tm) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
@@ -212,6 +276,51 @@ public class Ccc {
             }
         }, 0);
     }
+
+
+    public static class requestImgList extends AsyncTask<String, Void, String> {
+        String sendMsg, receiveMsg = "사진 없음";
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                URL url = new URL("http://"+serverIP+":8080/Serrrverrr/ImageList.jsp");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(false);
+                String str;
+                String[] imgList;
+                if (conn.getResponseCode() == conn.HTTP_OK) {
+                    InputStreamReader tmp = new InputStreamReader(conn.getInputStream(), "UTF-8");
+                    BufferedReader reader = new BufferedReader(tmp);
+                    StringBuffer buffer = new StringBuffer();
+
+                    // jsp에서 보낸 값을 받는 부분
+                    while ((str = reader.readLine()) != null) {
+                        buffer.append(str);
+                    }
+                    if(buffer.length()!=0){
+                        receiveMsg= buffer.toString();
+                    }
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //jsp로부터 받은 리턴 값
+            return receiveMsg;
+        }
+
+
+    }
+
+//http://localhost:8080/Serrrverrr/ImageList.jsp
+
 
 }
 
