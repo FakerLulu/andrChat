@@ -12,14 +12,15 @@ import java.net.URL;
 
 public class SignUpActivity extends AsyncTask<String, Void, String> {
     String sendMsg, receiveMsg;
-
+    static private String serverIP;
+    private ConnectionEnum ce = ConnectionEnum.ServerIP;
     @Override
     protected String doInBackground(String... strings) {
         try {
             String str;
-
+            serverIP = ce.getIp();
             // 접속할 서버 주소 (이클립스에서 android.jsp 실행시 웹브라우저 주소)
-            URL url = new URL("http://192.168.15.116:8080/ChatTest/SignUpDB.jsp");
+            URL url = new URL("http://"+serverIP+":8080/ChatTest/SignUpDB.jsp");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

@@ -1,6 +1,7 @@
 package com.example.chat;
 
 import android.os.AsyncTask;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,19 +10,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class FindIDActivity extends AsyncTask<String, Void, String> {
-
+public class Overlap extends AsyncTask<String, Void, String> {
     String sendMsg, receiveMsg;
-    static private String serverIP;
-    private ConnectionEnum ce = ConnectionEnum.ServerIP;
+    int num;
+
+    public Overlap(int num){
+        this.num = num;
+    }
 
     @Override
     protected String doInBackground(String... strings) {
         try {
             String str;
-            serverIP = ce.getIp();
+
             // 접속할 서버 주소 (이클립스에서 android.jsp 실행시 웹브라우저 주소)
-            URL url = new URL("http://"+serverIP+":8080/ChatTest/FindID.jsp");
+            URL url = new URL("http://192.168.15.116:8080/ChatTest/Overlap.jsp");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -29,8 +32,12 @@ public class FindIDActivity extends AsyncTask<String, Void, String> {
             conn.setDoOutput(true);
             DataOutputStream osw = new DataOutputStream(conn.getOutputStream());
 
+            if(num==1) sendMsg = "id="+strings[0];
+            else if(num==2) sendMsg = "email="+strings[0];
+
+
             // 전송할 데이터. GET 방식으로 작성
-            sendMsg = "email=" + strings[0];
+//            sendMsg = "id=" + strings[0], "&email="+ strings[1];
 
             osw.write(sendMsg.getBytes());
             osw.flush();
@@ -45,8 +52,7 @@ public class FindIDActivity extends AsyncTask<String, Void, String> {
                 while ((str = reader.readLine()) != null) {
                     buffer.append(str);
                 }
-
-                receiveMsg = new String(buffer.toString().getBytes(),"UTF-8");
+                receiveMsg = buffer.toString();
             } else {
                 // 통신 실패
             }
@@ -59,5 +65,4 @@ public class FindIDActivity extends AsyncTask<String, Void, String> {
         //jsp로부터 받은 리턴 값
         return receiveMsg;
     }
-
 }

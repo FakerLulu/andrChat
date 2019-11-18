@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- http 통신 허용 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+<!--    http 통신 허용  -->
     <permission android:name="Android.permission.INTERNET" />
 
     <application
@@ -16,36 +18,32 @@
         android:roundIcon="@mipmap/ic_launcher_team_uganda_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".ImgDown"></activity>
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".Login_screen_sub" />
-
+        android:usesCleartextTraffic ="true">
+        <activity android:name=".ChatActivity"></activity>
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_path" />
+        <activity android:name=".FindID"/>
 
-        <activity android:name=".FindID" />
-        <activity android:name=".FindPW" />
-        <activity android:name=".SignUp" />
+        <activity android:name=".ImgDown"/>
+
+        <activity android:name=".FindPW"/>
+
+        <activity android:name=".SignUp"/>
+
+
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Login_screen"
-            android:windowSoftInputMode="adjustResize">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+        <intent-filter>
+
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+
+    </intent-filter>
+
+    </activity>
     </application>
 
 </manifest>

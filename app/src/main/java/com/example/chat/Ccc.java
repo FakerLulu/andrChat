@@ -42,7 +42,7 @@ public class Ccc {
         Ccc.myName = myName;
     }
 
-    private static String myName;
+    private static String myName = "defaultName";
 
     public Ccc(AppCompatActivity chatActivity) {
         ma = chatActivity;
@@ -170,6 +170,7 @@ public class Ccc {
 
                 BufferedOutputStream toServer = new BufferedOutputStream(pSocket.getOutputStream());
                 DataOutputStream dos = new DataOutputStream(pSocket.getOutputStream());
+                dos.writeUTF(new String("up".getBytes(), "UTF-8"));
                 dos.writeUTF(new String(myName.getBytes(), "UTF-8"));
                 dos.writeUTF(new String(file.getName().getBytes(), "UTF-8"));
                 dos.writeUTF("" + file.length());
@@ -253,7 +254,7 @@ public class Ccc {
                     outFile.write(ch);
                 }
 
-                makeToast(filename + " 수신완료");
+                makeToast(filename + "을(를) 받았습니다");
                 outFile.flush();
                 outFile.close();
                 pSocket.close();
@@ -285,7 +286,7 @@ public class Ccc {
         protected String doInBackground(String... strings) {
 
             try {
-                URL url = new URL("http://"+serverIP+":8080/Serrrverrr/ImageList.jsp");
+                URL url = new URL("http://"+serverIP+":8080/ChatTest/ImageList.jsp");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestMethod("POST");

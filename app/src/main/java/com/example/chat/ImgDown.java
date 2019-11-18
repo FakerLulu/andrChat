@@ -100,7 +100,7 @@ public class ImgDown extends AppCompatActivity {
                 @Override
                 public void onLongPress(MotionEvent e) {
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && clickListener != null) {
+                        if (child != null && clickListener != null) {
                         clickListener.onLongClick(child, recyclerView.getChildAdapterPosition(child));
                     }
                 }

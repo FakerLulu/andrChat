@@ -2,6 +2,7 @@ package com.example.chat;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -48,18 +50,20 @@ public class ChatActivity extends AppCompatActivity {
         final TextInputEditText extView = findViewById(R.id.textInputEditText23);
         Button btn = findViewById(R.id.sendButton);
         Button imgPick = findViewById(R.id.pickImage);
-        Button imgDD = findViewById(R.id.down);
 
         textView.setMovementMethod(new ScrollingMovementMethod());
 
-//        ccc.start();
-        imgDD.setOnClickListener((View v)->{
+        extView.requestFocus();
+        ccc.start();
+
+        Button imgDD = findViewById(R.id.down);
+        imgDD.setOnClickListener((View v) -> {
             String list;
             try {
                 Ccc.requestImgList cl = new Ccc.requestImgList();
                 list = cl.execute("").get();
-                Intent intent = new Intent(getApplicationContext(),ImgDown.class);
-                intent.putExtra("lintname",list);
+                Intent intent = new Intent(getApplicationContext(), ImgDown.class);
+                intent.putExtra("lintname", list);
                 startActivity(intent);
             } catch (ExecutionException e) {
                 e.printStackTrace();
@@ -68,8 +72,6 @@ public class ChatActivity extends AppCompatActivity {
             }
 
         });
-
-
         imgPick.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -87,6 +89,7 @@ public class ChatActivity extends AppCompatActivity {
                 textView.scrollTo(0, 0);
             }
         });
+
         btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -100,6 +103,19 @@ public class ChatActivity extends AppCompatActivity {
             }
 
         });
+
+
+        extView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    btn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
